@@ -1,0 +1,33 @@
+.svg-container {
+  height: 100px; /* Set a fixed height or use percentage */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Align items to the start (left) */
+  margin-left: 20px;
+  padding-left: 20px;
+}
+svg {
+  padding: 0;
+  width: auto; /* Adjust width as needed */
+  height: 100px; /* Ensure height is set correctly */
+  object-fit: fill; /* Ensure the SVG scales while keeping its aspect ratio */
+}
+
+.welcome-text {
+  padding-left: 150px;
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #ffffff;
+  margin-right: 0px;
+}
+
+@media (max-width: 768px) {
+  .welcome-text {
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-top: 10px;
+  }
+  svg {
+    display: none;
+  }
+}
