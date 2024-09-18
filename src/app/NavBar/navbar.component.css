@@ -9,7 +9,7 @@
 svg {
   padding: 0;
   width: auto; /* Adjust width as needed */
-  height: 100px; /* Ensure height is set correctly */
+  height: 250px; /* Ensure height is set correctly */
   object-fit: fill; /* Ensure the SVG scales while keeping its aspect ratio */
 }
 
