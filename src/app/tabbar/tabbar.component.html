@@ -1,12 +1,37 @@
-@if ((asyncTabs | async) === null) { Loading Tabs... }
-
 <mat-tab-group>
-  @for (tab of asyncTabs | async; track tab){
   <mat-tab>
     <ng-template mat-tab-label>
-      {{ tab.label }}
+      <mat-icon>account_circle</mat-icon>
+      Profile
     </ng-template>
-    {{ tab.content }}
+    <app-profile></app-profile>
   </mat-tab>
-  }
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon>calendar_view_week</mat-icon>
+      Schedule
+    </ng-template>
+    <app-schedule></app-schedule>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon>school</mat-icon>
+      Academics
+    </ng-template>
+    <app-academics></app-academics>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon>payments</mat-icon>
+      Financials
+    </ng-template>
+    <app-financials></app-financials>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon>description</mat-icon>
+      Documents
+    </ng-template>
+    <app-documents></app-documents>
+  </mat-tab>
 </mat-tab-group>

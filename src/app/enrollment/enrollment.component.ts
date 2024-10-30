@@ -10,25 +10,23 @@ import { MatInputModule } from '@angular/material/input';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
+
 @Component({
-  selector: 'app-profile',
+  selector: 'app-enrollment',
   standalone: true,
   imports: [
-    NavbarComponent,
+    MatButtonModule,
     MatTableModule,
     CommonModule,
+    MatAccordion,
     MatExpansionModule,
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule,
     MatListModule,
     MatDividerModule,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css',
+  templateUrl: './enrollment.component.html',
+  styleUrl: './enrollment.component.css',
 })
-export class ProfileComponent {
-  accordion = viewChild.required(MatAccordion);
-}
+export class EnrollmentComponent {}

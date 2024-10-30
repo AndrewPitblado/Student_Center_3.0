@@ -1,1 +1,92 @@
-<p>profile works!</p>
+<div class="example-action-buttons">
+  <button mat-button (click)="accordion().openAll()">Expand All</button>
+  <button mat-button (click)="accordion().closeAll()">Collapse All</button>
+</div>
+<mat-accordion class="example-headers-align" multi>
+  <mat-expansion-panel expanded="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title> Personal Information </mat-panel-title>
+      <mat-panel-description>
+        View your Name, Date of Birth, and SSN
+        <mat-icon>account_circle</mat-icon>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div class="text-container">
+      <mat-label>Name:</mat-label>
+
+      <mat-list-item>Andrew Pitblado</mat-list-item>
+    </div>
+
+    <mat-divider></mat-divider>
+    <div class="text-container">
+      <mat-label>Date of Birth:</mat-label>
+      <mat-list-item>01/01/1990</mat-list-item>
+    </div>
+    <mat-divider></mat-divider>
+    <!-- <mat-form-field>
+      <mat-label>First name</mat-label>
+      <input matInput />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Age</mat-label>
+      <input matInput type="number" min="1" />
+    </mat-form-field> -->
+    <div class="text-container">
+      <mat-label>Social Insurance Number</mat-label>
+      <mat-list-item>123456789</mat-list-item>
+    </div>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title> Contact Information </mat-panel-title>
+      <mat-panel-description>
+        View your Address, Phone number, and Email
+        <mat-icon>phone</mat-icon>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div class="text-container">
+      <mat-label>Address:</mat-label>
+
+      <mat-list-item>123 Marry Lane</mat-list-item>
+    </div>
+
+    <mat-divider></mat-divider>
+    <div class="text-container">
+      <mat-label>Phone Number:</mat-label>
+      <mat-list-item>519-868-1770</mat-list-item>
+    </div>
+    <mat-divider></mat-divider>
+
+    <div class="text-container">
+      <mat-label>Email Address:</mat-label>
+      <mat-list-item>apitblado&#64;gmail.com</mat-list-item>
+    </div>
+
+    <mat-form-field>
+      <mat-label>Country</mat-label>
+      <input matInput />
+    </mat-form-field>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title> Emergency Contacts </mat-panel-title>
+      <mat-panel-description>
+        List the Names and Phone numbers of your emergency contacts
+        <mat-icon>health_and_safety</mat-icon>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div class="text-container">
+      <mat-label>Name:</mat-label>
+      <mat-list-item>Jane Doe</mat-list-item>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="text-container">
+      <mat-label>Phone Number:</mat-label>
+      <mat-list-item>519-868-1770</mat-list-item>
+    </div>
+    <mat-divider></mat-divider>
+  </mat-expansion-panel>
+</mat-accordion>
