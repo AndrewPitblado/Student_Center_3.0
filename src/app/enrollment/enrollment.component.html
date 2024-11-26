@@ -3,40 +3,128 @@
     <mat-expansion-panel-header>
       <mat-panel-title>Enrollment Appointment </mat-panel-title>
       <mat-panel-description>
-        View your Name, Date of Birth, and SSN
+        View your Sessions, Start Time, and End Time of Courses
         <mat-icon>account_circle</mat-icon>
       </mat-panel-description>
     </mat-expansion-panel-header>
-    <div class="text-container">
-      <mat-label>Fall/Winter Regular Session:</mat-label>
-
-      <mat-list-item>Andrew Pitblado</mat-list-item>
-    </div>
-
-    <mat-divider></mat-divider>
-    <div class="text-container">
-      <mat-label>Summer Session: </mat-label>
-      <mat-list-item>01/01/1990</mat-list-item>
+    <div class="grid-container">
+      <!-- Row 1 -->
+      <div class="grid-header">Session</div>
+      <div class="grid-header">Start Time</div>
+      <div class="grid-header">End Time</div>
+      <ng-container *ngFor="let session of sessionData">
+        <div class="grid-item">{{ session.session }}</div>
+        <div class="grid-item">{{ session.startTime }}</div>
+        <div class="grid-item">{{ session.endTime }}</div>
+      </ng-container>
     </div>
   </mat-expansion-panel>
+
   <mat-expansion-panel expanded="true">
     <mat-expansion-panel-header>
-      <mat-panel-title> Personal Information </mat-panel-title>
+      <mat-panel-title> Courses </mat-panel-title>
       <mat-panel-description>
-        View your Name, Date of Birth, and SSN
+        Add, Drop, or Swap Courses
         <mat-icon>account_circle</mat-icon>
       </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="text-container">
-      <mat-label>Name:</mat-label>
-
-      <mat-list-item>Andrew Pitblado</mat-list-item>
+      <h2>Session Selection</h2>
     </div>
+
+    <app-course-selector (courseSelected)="onCourseSelected($event)">
+    </app-course-selector>
+    <!-- <mat-form-field>
+        <mat-label>Select a Session</mat-label>
+        <mat-select [formControl]="sessionControl" required
+          ><mat-option>--</mat-option> @for (SessionData of sessionData; track
+          SessionData){
+          <mat-option [value]="SessionData">{{
+            SessionData.session
+          }}</mat-option>
+          }</mat-select
+        >
+        @if (sessionControl.hasError('required')) {
+        <mat-error>Please select a session</mat-error>
+        }
+      </mat-form-field> -->
 
     <mat-divider></mat-divider>
     <div class="text-container">
-      <mat-label>Date of Birth:</mat-label>
-      <mat-list-item>01/01/1990</mat-list-item>
+      <h2>Add a Course</h2>
+    </div>
+    <div class="search-container">
+      <mat-form-field appearance="fill" class="search-field">
+        <mat-label>Search Courses</mat-label>
+        <input
+          type="text"
+          matInput
+          [formControl]="searchControl"
+          [matAutocomplete]="auto"
+          placeholder="Start typing to search..."
+        />
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+          @for (option of filteredCourses$ | async; track option) {
+          <mat-option [value]="option">
+            {{ option.name }} - {{ option.courseCode }}
+          </mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+      <div class="add-button">
+        <button mat-raised-button>Add</button>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="text-container">
+      <h2>Drop</h2>
+    </div>
+    <div class="search-container">
+      <mat-form-field appearance="fill" class="search-field">
+        <mat-label>Search Courses</mat-label>
+        <input
+          type="text"
+          matInput
+          [formControl]="searchControl"
+          [matAutocomplete]="auto"
+          placeholder="Start typing to search..."
+        />
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+          @for (option of filteredCourses$ | async; track option) {
+          <mat-option [value]="option">
+            {{ option.name }} - {{ option.courseCode }}
+          </mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+      <div class="drop-button">
+        <button mat-raised-button color="warn">Drop</button>
+      </div>
+    </div>
+    <div class="text-container">
+      <h2>(Optional) Swap With</h2>
+    </div>
+    <div class="search-container">
+      <mat-form-field appearance="fill" class="search-field">
+        <mat-label>Search Courses</mat-label>
+        <input
+          type="text"
+          matInput
+          [formControl]="searchControl"
+          [matAutocomplete]="auto"
+          placeholder="Start typing to search..."
+        />
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+          @for (option of filteredCourses$ | async; track option) {
+          <mat-option [value]="option">
+            {{ option.name }} - {{ option.courseCode }}
+          </mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+      <div class="swap-button">
+        <button mat-raised-button>Swap Courses</button>
+      </div>
     </div>
   </mat-expansion-panel>
 </mat-accordion>

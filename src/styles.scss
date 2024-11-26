@@ -1,0 +1,29 @@
+/* You can add global styles to this file, and also import other style files */
+@use "@angular/material" as mat;
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+.mat-mdc-tab-header {
+  @include mat.elevation(2);
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  z-index: 1000;
+  top: 0;
+  background-color: white;
+  backdrop-filter: blur(10px);
+  --webkit-backdrop-filter: blur(10px);
+}
+.mat-mdc-tab-header::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), transparent);
+}

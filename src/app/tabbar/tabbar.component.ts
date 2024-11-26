@@ -5,14 +5,23 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
 import { ProfileComponent } from '../profile/profile.component';
-
+import { AddStudentComponent } from '../add-student/add-student.component';
 import { CommonModule } from '@angular/common';
 import { ScheduleComponent } from '../schedule/schedule.component';
-
+import { AddCourseComponent } from '../add-course/add-course.component';
 import { AcademicsComponent } from '../academics/academics.component';
 import { FinancialsComponent } from '../financials/financials.component';
 import { DocumentsComponent } from '../documents/documents.component';
+import { AdminStateService } from '../services/admin-state.service';
+import { ActivatedRoute } from '@angular/router';
 
+interface TabConfig {
+  icon: string;
+  label: string;
+  component: any;
+  adminOnly?: boolean;
+  studentOnly?: boolean;
+}
 @Component({
   selector: 'app-tabbar',
   standalone: true,
@@ -20,12 +29,13 @@ import { DocumentsComponent } from '../documents/documents.component';
     MatButtonModule,
     MatTabsModule,
     MatIconModule,
-
+    AddStudentComponent,
     ProfileComponent,
     ScheduleComponent,
     FinancialsComponent,
     AcademicsComponent,
     DocumentsComponent,
+    AddCourseComponent,
 
     CommonModule,
   ],
@@ -33,23 +43,70 @@ import { DocumentsComponent } from '../documents/documents.component';
   styleUrl: './tabbar.component.css',
 })
 export class TabbarComponent implements OnInit {
-  // asyncTabs: Observable<any>;
-  // @ViewChild(DynamicTabDirective, { static: true })
-  // dynamicTab!: DynamicTabDirective;
-  constructor() {
-    // this.asyncTabs = new Observable((observer: Observer<any>) => {
-    //   setTimeout(() => {
-    //     observer.next([
-    //       { label: 'Profile', component: ProfileComponent },
-    //       { label: 'Course Schedule', component: ScheduleComponent },
-    //       { label: 'Academics', component: AcademicsComponent },
-    //       { label: 'Financials', component: FinancialsComponent },
-    //       { label: 'Documents', component: DocumentsComponent },
-    //     ]);
-    //   }, 1000);
-    // });
+  isAdmin$: Observable<boolean>;
+  selectedIndex = 0;
+
+  constructor(
+    private adminStateService: AdminStateService,
+    private route: ActivatedRoute
+  ) {
+    this.isAdmin$ = this.adminStateService.isAdmin$;
   }
-  ngOnInit(): void {}
+
+  tabs: TabConfig[] = [
+    {
+      icon: 'account_circle',
+      label: 'Profile',
+      component: ProfileComponent,
+    },
+    {
+      icon: 'schedule',
+      label: 'Schedule',
+      component: ScheduleComponent,
+      studentOnly: true,
+    },
+    {
+      icon: 'school',
+      label: 'Academics',
+      component: AcademicsComponent,
+      studentOnly: true,
+    },
+    {
+      icon: 'attach_money',
+      label: 'Financials',
+      component: FinancialsComponent,
+      studentOnly: true,
+    },
+    {
+      icon: 'description',
+      label: 'Documents',
+      component: DocumentsComponent,
+      studentOnly: true,
+    },
+    {
+      icon: 'addition',
+      label: 'Add Course',
+      component: AddCourseComponent,
+      adminOnly: true,
+    },
+    {
+      icon: 'add',
+      label: 'Add Student',
+      component: AddStudentComponent,
+      adminOnly: true,
+    },
+  ];
+
+  ngOnInit() {
+    this.route.fragment.subscribe((fragment) => {
+      const index = this.tabs.findIndex(
+        (tab) => tab.label.toLowerCase() === fragment
+      );
+      if (index >= 0) {
+        this.selectedIndex = index;
+      }
+    });
+  }
 
   // loadComponent(component: any): void {
   //   const viewContainerRef = this.dynamicTab.viewContainerRef;

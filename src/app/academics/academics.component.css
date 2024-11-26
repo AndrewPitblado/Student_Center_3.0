@@ -16,3 +16,6 @@ mat-drawer-content {
 .selected-buttontext {
   color: white !important;
 }
+button {
+  margin-left: 50px;
+}

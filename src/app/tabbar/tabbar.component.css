@@ -5,3 +5,17 @@
 .page-container {
   min-height: 100vh;
 }
+/* .mat-tab-group .mat-mdc-tab-header {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  background-color: white;
+}
+::ng-deep .mat-mdc-tab-header {
+  position: -webkit-sticky !important;
+  top: 0 !important;
+  z-index: 1000;
+  background: white;
+} */

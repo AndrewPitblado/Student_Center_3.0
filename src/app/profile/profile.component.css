@@ -44,3 +44,27 @@
 
   margin-left: -160px;
 }
+
+.profile-container {
+  max-width: 800px;
+  margin: 20px auto;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.action-buttons {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.readonly-field {
+  background-color: #cbcaca;
+  pointer-events: none;
+  padding: 5px;
+  border-radius: 5px;
+}

@@ -1,4 +1,35 @@
-<mat-tab-group>
+<mat-tab-group [(selectedIndex)]="selectedIndex">
+  @for (tab of tabs; track tab) { @if ((!tab.adminOnly && !tab.studentOnly) ||
+  (tab.adminOnly && (isAdmin$ | async)) || (tab.studentOnly && !(isAdmin$ |
+  async))) {
+  <mat-tab [id]="tab.label.toLowerCase()">
+    <!-- existing tab content -->
+    <ng-template mat-tab-label>
+      <mat-icon>{{ tab.icon }}</mat-icon>
+      {{ tab.label }}
+    </ng-template>
+    <ng-container [ngComponentOutlet]="tab.component"></ng-container>
+  </mat-tab>
+  } }
+</mat-tab-group>
+
+<!-- Newer version of tabs -->
+<!-- <mat-tab-group [(selectedIndex)]="">
+  @for(tab of tabs; track tab){ @if((!tab.adminOnly && !tab.studentOnly)||
+  (tab.adminOnly && (isAdmin$ | async)) || (tab.studentOnly && !(isAdmin$ |
+  async))){
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon>{{ tab.icon }}</mat-icon>
+      {{ tab.label }}
+    </ng-template>
+    <ng-containter [ngComponentOutlet]="tab.component"></ng-containter>
+  </mat-tab>
+  } }
+</mat-tab-group> -->
+
+<!-- Old working tab layout -->
+<!-- <mat-tab-group>
   <mat-tab>
     <ng-template mat-tab-label>
       <mat-icon>account_circle</mat-icon>
@@ -34,4 +65,4 @@
     </ng-template>
     <app-documents></app-documents>
   </mat-tab>
-</mat-tab-group>
+</mat-tab-group> -->

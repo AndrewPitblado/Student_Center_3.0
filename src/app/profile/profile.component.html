@@ -1,8 +1,176 @@
 <div class="example-action-buttons">
-  <button mat-button (click)="accordion().openAll()">Expand All</button>
-  <button mat-button (click)="accordion().closeAll()">Collapse All</button>
+  <button mat-button (click)="expandAll()">Expand All</button>
+  <button mat-button (click)="collapseAll()">Collapse All</button>
+  <button mat-button (click)="logout()" *ngIf="authService.isAuthenticated()">
+    Logout
+  </button>
 </div>
-<mat-accordion class="example-headers-align" multi>
+<div class="profile-container">
+  <mat-accordion #myaccordion="matAccordion" multi="true">
+    <mat-expansion-panel
+      *ngFor="let item of [1]; first as isFirst"
+      [expanded]="isFirst"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title>Personal Information</mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <form [formGroup]="profileForm" (ngSubmit)="onSubmit(0)">
+        <div class="form-grid">
+          <mat-form-field [ngClass]="{ 'readonly-field': !isEditing[0] }">
+            <mat-label>First Name</mat-label>
+            <input
+              matInput
+              formControlName="firstName"
+              [readonly]="!isEditing[0]"
+            />
+          </mat-form-field>
+
+          <mat-form-field [ngClass]="{ 'readonly-field': !isEditing[0] }">
+            <mat-label>Last Name</mat-label>
+            <input
+              matInput
+              formControlName="lastName"
+              [readonly]="!isEditing[0]"
+            />
+          </mat-form-field>
+
+          <mat-form-field [ngClass]="{ 'readonly-field': !isEditing[0] }">
+            <mat-label>Date of Birth</mat-label>
+            <input
+              matInput
+              formControlName="birthday"
+              [readonly]="!isEditing[0]"
+            />
+          </mat-form-field>
+          <mat-form-field [ngClass]="{ 'readonly-field': !isEditing[0] }">
+            <mat-label>Social Insurance Number</mat-label>
+            <input
+              matInput
+              formControlName="socialInsuranceNum"
+              [readonly]="!isEditing[0]"
+            />
+          </mat-form-field>
+
+          <div class="action-buttons">
+            <button
+              mat-button
+              type="button"
+              *ngIf="!isEditing[0]"
+              (click)="isEditing[0] = true"
+            >
+              Edit Profile
+            </button>
+            <button
+              mat-raised-button
+              color="primary"
+              *ngIf="isEditing[0]"
+              type="submit"
+            >
+              Save Changes
+            </button>
+            <button
+              mat-button
+              type="button"
+              *ngIf="isEditing[0]"
+              (click)="cancelEdit(0)"
+            >
+              Cancel
+            </button>
+          </div>
+
+          <!-- Add similar fields for other user properties -->
+        </div>
+      </form>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Contact Information</mat-panel-title>
+      </mat-expansion-panel-header>
+      <form [formGroup]="profileForm" (ngSubmit)="onSubmit(1)">
+        <div class="form-grid">
+          <mat-form-field [ngClass]="{ 'readonly-field': !isEditing[1] }">
+            <mat-label>Phone Number</mat-label>
+            <input
+              matInput
+              formControlName="phoneNum"
+              [readonly]="!isEditing[1]"
+            />
+          </mat-form-field>
+
+          <mat-form-field [ngClass]="{ 'readonly-field': !isEditing[1] }">
+            <mat-label>Email Address</mat-label>
+            <input
+              matInput
+              formControlName="email"
+              [readonly]="!isEditing[1]"
+            />
+          </mat-form-field>
+
+          <mat-form-field [ngClass]="{ 'readonly-field': !isEditing[1] }">
+            <mat-label>Address</mat-label>
+            <input
+              matInput
+              formControlName="streetAddress"
+              [readonly]="!isEditing[1]"
+            />
+          </mat-form-field>
+
+          <mat-form-field [ngClass]="{ 'readonly-field': !isEditing[1] }">
+            <mat-label>Province</mat-label>
+            <input
+              matInput
+              formControlName="province"
+              [readonly]="!isEditing[1]"
+            />
+          </mat-form-field>
+
+          <mat-form-field [ngClass]="{ 'readonly-field': !isEditing[1] }">
+            <mat-label>City</mat-label>
+            <input matInput formControlName="city" [readonly]="!isEditing[1]" />
+          </mat-form-field>
+          <mat-form-field [ngClass]="{ 'readonly-field': !isEditing[1] }">
+            <mat-label>Postal Code</mat-label>
+            <input
+              matInput
+              formControlName="postalCode"
+              [readonly]="!isEditing[1]"
+            />
+          </mat-form-field>
+
+          <div class="action-buttons">
+            <button
+              mat-button
+              type="button"
+              *ngIf="!isEditing[1]"
+              (click)="isEditing[1] = true"
+            >
+              Edit Profile
+            </button>
+            <button
+              mat-raised-button
+              color="primary"
+              *ngIf="isEditing[1]"
+              type="submit"
+            >
+              Save Changes
+            </button>
+            <button
+              mat-button
+              type="button"
+              *ngIf="isEditing[1]"
+              (click)="cancelEdit(1)"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </form>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+
+<!-- <mat-accordion class="example-headers-align" multi>
   <mat-expansion-panel expanded="true">
     <mat-expansion-panel-header>
       <mat-panel-title> Personal Information </mat-panel-title>
@@ -23,15 +191,7 @@
       <mat-list-item>01/01/1990</mat-list-item>
     </div>
     <mat-divider></mat-divider>
-    <!-- <mat-form-field>
-      <mat-label>First name</mat-label>
-      <input matInput />
-    </mat-form-field>
-
-    <mat-form-field>
-      <mat-label>Age</mat-label>
-      <input matInput type="number" min="1" />
-    </mat-form-field> -->
+   
     <div class="text-container">
       <mat-label>Social Insurance Number</mat-label>
       <mat-list-item>123456789</mat-list-item>
@@ -89,4 +249,4 @@
     </div>
     <mat-divider></mat-divider>
   </mat-expansion-panel>
-</mat-accordion>
+</mat-accordion> -->

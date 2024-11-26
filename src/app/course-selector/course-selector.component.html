@@ -1,0 +1,80 @@
+<!-- course-selector.component.html -->
+<div class="course-selector">
+  <!-- Search and Filter Controls -->
+  <div class="controls-container">
+    <!-- Search Input -->
+    <div class="search-container">
+      <input
+        #courseInput
+        matInput
+        [formControl]="searchControl"
+        type="text"
+        placeholder="Search courses..."
+        class="search-input"
+        (focus)="isDropdownOpen = true"
+        [value]="selectedCourseDisplay"
+      />
+    </div>
+
+    <!-- Filter Select -->
+    <mat-select
+      [ngModel]="selectedFilter"
+      (ngModelChange)="onFilterChange($event)"
+      class="filter-select"
+    >
+      <mat-option value="all">All Courses</mat-option>
+      <mat-option value="available">Available Seats</mat-option>
+      <mat-option value="current">Current Courses</mat-option>
+      <mat-option value="upcoming">Upcoming Courses</mat-option>
+    </mat-select>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">Loading courses...</div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-state">
+    {{ error }}
+  </div>
+
+  <!-- Course List Dropdown -->
+  <div
+    *ngIf="isDropdownOpen && !isLoading"
+    class="course-dropdown"
+    #courseDropdown
+  >
+    <div *ngIf="filteredCourses.length === 0" class="no-results">
+      No courses found
+    </div>
+
+    <ul *ngIf="filteredCourses.length > 0" class="course-list">
+      <li
+        *ngFor="let course of filteredCourses"
+        (click)="selectCourse(course)"
+        class="course-item"
+      >
+        <div class="course-info">
+          <div class="course-header">
+            <span class="course-code"
+              >{{ course.courseAlias }} {{ course.courseSuffix }}</span
+            >
+            <span class="seats-info"
+              >{{ course.numEnrolled }}/{{ course.totalSeats }} seats</span
+            >
+          </div>
+          <div class="course-name">{{ course.courseName }}</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <!-- Selected Course and Enroll Button -->
+  <div *ngIf="selectedCourse" class="selected-course">
+    <h3>
+      You selected: {{ selectedCourse.courseAlias }}
+      {{ selectedCourse.courseSuffix }}
+    </h3>
+    <button mat-raised-button color="primary" (click)="enrollInCourse()">
+      Enroll in Course
+    </button>
+  </div>
+</div>

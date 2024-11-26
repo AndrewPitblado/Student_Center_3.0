@@ -1,7 +1,17 @@
-.sticky-tabbar {
-  position: -webkit-sticky; /* For Safari */
+app-tabbar {
   position: sticky;
-  top: 30;
-  z-index: 1000; /* Ensure it stays above other content */
-  background-color: white; /* Optional: Set a background color to avoid transparency issues */
+  position: -webkit-sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  background-color: white;
+}
+main {
+  position: relative;
+}
+
+.main {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }

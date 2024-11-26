@@ -1,33 +1,33 @@
-.svg-container {
-  height: 100px; /* Set a fixed height or use percentage */
+svg {
+  width: auto; /* Adjust width as needed */
+  height: 200px; /* Ensure height is set correctly */
+  object-fit: fill; /* Ensure the SVG scales while keeping its aspect ratio */
+
+  margin-left: 20px;
+}
+.navbar {
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Align items to the start (left) */
-  margin-left: 20px;
-  padding-left: 20px;
-}
-svg {
-  padding: 0;
-  width: auto; /* Adjust width as needed */
-  height: 125px; /* Ensure height is set correctly */
-  object-fit: fill; /* Ensure the SVG scales while keeping its aspect ratio */
+
+  width: 100%;
+  padding: 10px 0;
 }
 
-.welcome-text {
-  padding-left: 150px;
-  font-size: 2.5em;
+.welcome-text-container {
+  flex-grow: 1;
+  text-align: center;
+  font-size: 2em;
   font-weight: bold;
   color: #ffffff;
-  margin-right: 0px;
+  margin-right: 150px;
 }
 
 @media (max-width: 768px) {
   .welcome-text {
-    padding-left: 0px;
-    padding-right: 0px;
+    padding: 0;
     margin-top: 10px;
   }
   svg {
-    display: none;
+    height: 100px;
   }
 }

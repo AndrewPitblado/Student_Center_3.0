@@ -10,7 +10,7 @@
           <input
             matInput
             placeholder="Enter User ID"
-            formControlName="username"
+            formControlName="userId"
           />
         </mat-form-field>
         <mat-form-field appearance="fill">
@@ -28,15 +28,19 @@
         <button mat-raised-button type="submit" [disabled]="!loginForm.valid">
           Log In
         </button>
+        @if (loginError){
+        <mat-error *ngIf="loginError" class="error-message">{{
+          loginError
+        }}</mat-error>
+        }
       </form>
     </div>
   </div>
   <div class="image-container">
     <img
-    src="assets/ucwallpaper.jpg"
-    class="background-image"
-    alt="UC Wallpaper"
+      src="assets/ucwallpaper.jpg"
+      class="background-image"
+      alt="UC Wallpaper"
     />
   </div>
-  
 </div>
