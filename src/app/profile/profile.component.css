@@ -6,12 +6,33 @@
   padding: 20px;
   align-items: flex-end;
 }
+.theme-toggle {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.theme-toggle .mat-icon {
+  padding: 0; /* Remove default padding */
+  margin: 0;
+  height: 24px;
+  width: 24px;
+  line-height: 24px;
+}
+/* Update general icon styles to not affect theme toggle */
+.mat-icon {
+  padding-left: 20px;
+}
+.mat-icon-button .mat-icon {
+  padding-left: 0;
+}
 
 .example-action-buttons {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
   margin: 20px;
-  padding: 10px;
-  width: max-content;
-  height: fit-content;
 }
 .example-action-buttons {
   padding-bottom: 20px;
@@ -46,8 +67,10 @@
 }
 
 .profile-container {
-  max-width: 800px;
+  max-width: 1000px;
   margin: 20px auto;
+  background-color: inherit;
+  padding: 20px;
 }
 
 .form-grid {
@@ -63,8 +86,18 @@
   gap: 10px;
 }
 .readonly-field {
-  background-color: #cbcaca;
+  background-color: #0000000f;
   pointer-events: none;
   padding: 5px;
-  border-radius: 5px;
+  border-radius: 10px;
+}
+.mat-datepicker-toggle {
+  color: inherit;
+}
+
+.readonly-field .mat-datepicker-toggle {
+  display: none;
+}
+.mat-drawer {
+  background-color: inherit;
 }

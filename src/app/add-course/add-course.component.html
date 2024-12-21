@@ -1,1 +1,241 @@
-<p>add-course works!</p>
+<mat-card class="course-form-card">
+  <mat-card-header>
+    <mat-card-title>Add New Course</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="courseForm" (ngSubmit)="onSubmit()" class="course-form">
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Course Name</mat-label>
+          <input
+            matInput
+            formControlName="courseName"
+            required
+            [(ngModel)]="course.courseName"
+            placeholder="Eg. Computer Science 1026"
+            maxlength="60"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Course Suffix</mat-label>
+          <input
+            matInput
+            formControlName="courseSuffix"
+            required
+            [(ngModel)]="course.courseSuffix"
+            placeholder="A/B"
+            maxlength="1"
+          />
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Course Alias</mat-label>
+        <input
+          matInput
+          formControlName="courseAlias"
+          required
+          [(ngModel)]="course.courseAlias"
+          maxlength="60"
+          placeholder="Eg Computer Science Fundamentals I or LAB/TUT "
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Course Description</mat-label>
+        <textarea
+          matInput
+          formControlName="courseDesc"
+          required
+          [(ngModel)]="course.courseDesc"
+          rows="3"
+          maxlength="400"
+        ></textarea>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Extra Information</mat-label>
+        <textarea
+          matInput
+          formControlName="extraInformation"
+          rows="2"
+          [(ngModel)]="course.extraInformation"
+          placeholder="Eg. 3 Lecture Hours, 2 Lab Hours"
+        ></textarea>
+      </mat-form-field>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Prerequisites</mat-label>
+          <textarea
+            matInput
+            [(ngModel)]="course.prerequisites"
+            formControlName="prerequisites"
+            rows="2"
+            placeholder="Eg. Computer Science 1025, Computer Science 1026, AND"
+          ></textarea>
+          <mat-hint>Seperate with comma, suffix with 'AND' 'OR' </mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Antirequisites</mat-label>
+          <textarea
+            matInput
+            [(ngModel)]="course.antirequisites"
+            formControlName="antirequisites"
+            rows="2"
+            placeholder="Eg. Computer Science 1025"
+          ></textarea>
+          <mat-hint>If multiple courses seperate with a comma</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Course Weight</mat-label>
+          <input
+            matInput
+            [(ngModel)]="course.courseWeight"
+            type="number"
+            formControlName="courseWeight"
+            required
+            step="0.5"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Start Date</mat-label>
+          <input
+            matInput
+            [(ngModel)]="course.startDate"
+            [matDatepicker]="startPicker"
+            formControlName="startDate"
+            required
+          />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="startPicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>End Date</mat-label>
+          <input
+            matInput
+            [(ngModel)]="course.endDate"
+            [matDatepicker]="endPicker"
+            formControlName="endDate"
+            required
+          />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="endPicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #endPicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Instructor</mat-label>
+          <input
+            matInput
+            [(ngModel)]="course.instructor"
+            formControlName="instructor"
+            required
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Room</mat-label>
+          <input
+            matInput
+            formControlName="room"
+            required
+            [(ngModel)]="course.room"
+            placeholder="Eg. MSC-1"
+          />
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Number Enrolled</mat-label>
+          <input
+            matInput
+            [(ngModel)]="course.numEnrolled"
+            type="number"
+            formControlName="numEnrolled"
+            required
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Total Seats</mat-label>
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="course.totalSeats"
+            formControlName="totalSeats"
+            required
+          />
+        </mat-form-field>
+      </div>
+
+      <div formArrayName="courseTimes">
+        <div
+          *ngFor="let ct of courseTimes.controls; let i = index"
+          [formGroupName]="i"
+          class="form-row"
+        >
+          <mat-form-field appearance="outline">
+            <mat-label>Weekday</mat-label>
+            <mat-select formControlName="weekday">
+              <mat-option [value]="1">Monday</mat-option>
+              <mat-option [value]="2">Tuesday</mat-option>
+              <mat-option [value]="3">Wednesday</mat-option>
+              <mat-option [value]="4">Thursday</mat-option>
+              <mat-option [value]="5">Friday</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Start Time</mat-label>
+            <input matInput type="time" formControlName="startTime" required />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>End Time</mat-label>
+            <input matInput type="time" formControlName="endTime" required />
+          </mat-form-field>
+
+          <!-- Button to remove a course time -->
+          <button
+            mat-icon-button
+            color="warn"
+            (click)="removeCourseTime(i)"
+            *ngIf="courseTimes.length > 1"
+          >
+            <mat-icon>remove_circle</mat-icon>
+          </button>
+        </div>
+
+        <!-- Button to add a new course time -->
+        <button mat-button (click)="addCourseTime()">
+          <mat-icon>add</mat-icon> Add Course Time
+        </button>
+      </div>
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="!courseForm.valid"
+      >
+        Add Course
+      </button>
+    </form>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,42 @@
+.course-form-card {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+.course-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+mat-form-field {
+  flex: 1;
+  min-width: 250px;
+}
+
+button[type="submit"] {
+  align-self: flex-end;
+  min-width: 150px;
+}
+
+mat-card-title {
+  margin-bottom: 20px;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  mat-form-field {
+    width: 100%;
+  }
+}

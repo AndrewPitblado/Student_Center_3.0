@@ -6,7 +6,7 @@ import { throwError } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import { HttpErrorResponse } from '@angular/common/http';
-import { CourseDTO } from '../interface/course';
+import { CourseDTO, CreateCourseDTO } from '../interface/course';
 import {
   BehaviorSubject,
   from,
@@ -15,13 +15,17 @@ import {
   of,
   switchMap,
 } from 'rxjs';
-
+interface CourseResponse {
+  courseNum: number;
+  message: string;
+}
 @Injectable({
   providedIn: 'root',
 })
 export class courseService {
   private apiUrl = 'http://localhost:5003/api/Course';
   private apiUrl2 = 'http://localhost:5003/api/Course';
+  private apiUrl3 = 'http://localhost:5145/api/CourseService';
   constructor(private http: HttpClient) {}
 
   // HTTP Headers
@@ -32,6 +36,9 @@ export class courseService {
         // Add any additional headers you need
       }),
     };
+  }
+  addCourse(courseData: CreateCourseDTO): Observable<CourseResponse> {
+    return this.http.post<CourseResponse>(this.apiUrl3, courseData);
   }
 
   // Error Handler
@@ -204,6 +211,18 @@ export class courseService {
       .put<CourseDTO[]>(`${this.apiUrl}/batch`, courses, this.getHttpOptions())
       .pipe(catchError(this.handleError));
   }
+  updateEnrollmentCount(
+    courseNum: number,
+    numEnrolled: number
+  ): Observable<CourseDTO> {
+    return this.http
+      .patch<CourseDTO>(
+        `${this.apiUrl}/${courseNum}/update-enrollment`,
+        numEnrolled,
+        this.getHttpOptions()
+      )
+      .pipe(catchError(this.handleError));
+  }
 
   deleteMultipleCourses(courseNums: number[]): Observable<any> {
     return this.http
@@ -212,5 +231,22 @@ export class courseService {
         body: courseNums,
       })
       .pipe(catchError(this.handleError));
+  }
+  queryCourses(query: string): Observable<CourseDTO[]> {
+    console.log(`Searching courses with query: ${query}`);
+    const url = `${this.apiUrl3}/search?query=${query}`;
+    console.log(`Request URL: ${url}`);
+    return this.http.get<CourseDTO[]>(url).pipe(
+      catchError((error) => {
+        console.error('Search Error:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+  trimCourseSearch(query: string): Observable<CourseDTO[]> {
+    if (!query.trim()) {
+      return of([]);
+    }
+    return this.http.get<CourseDTO[]>(`${this.apiUrl3}/search?query=${query}`);
   }
 }

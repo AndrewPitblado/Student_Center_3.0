@@ -1,8 +1,22 @@
 <div class="example-action-buttons">
-  <button mat-button (click)="expandAll()">Expand All</button>
-  <button mat-button (click)="collapseAll()">Collapse All</button>
-  <button mat-button (click)="logout()" *ngIf="authService.isAuthenticated()">
+  <button mat-button (click)="expandAll()" class="expand-collapse-button">
+    Expand All
+  </button>
+  <button mat-button (click)="collapseAll()" class="expand-collapse-button">
+    Collapse All
+  </button>
+  <button
+    mat-button
+    (click)="logout()"
+    *ngIf="authService.isAuthenticated()"
+    class="logout-button"
+  >
     Logout
+  </button>
+  <button mat-icon-button (click)="toggleTheme()" class="theme-toggle">
+    <mat-icon>{{
+      (isDarkMode$ | async) ? "light_mode" : "dark_mode"
+    }}</mat-icon>
   </button>
 </div>
 <div class="profile-container">
@@ -39,9 +53,15 @@
             <mat-label>Date of Birth</mat-label>
             <input
               matInput
+              [matDatepicker]="picker"
               formControlName="birthday"
               [readonly]="!isEditing[0]"
             />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
           <mat-form-field [ngClass]="{ 'readonly-field': !isEditing[0] }">
             <mat-label>Social Insurance Number</mat-label>

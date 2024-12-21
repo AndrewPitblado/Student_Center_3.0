@@ -18,7 +18,11 @@ import { FormGroup } from '@angular/forms';
 import { User } from '../interface/auth.types';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
-
+import { Observable } from 'rxjs';
+import { ThemeService } from '../services/theme.service';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-profile',
   standalone: true,
@@ -35,7 +39,10 @@ import { CdkAccordionModule } from '@angular/cdk/accordion';
     MatDividerModule,
     ReactiveFormsModule,
     CdkAccordionModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
+  providers: [DatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css',
@@ -45,9 +52,12 @@ export class ProfileComponent implements OnInit {
   userProfile?: User;
   profileForm: FormGroup;
   isEditing: boolean[] = [];
+  isDarkMode$: Observable<boolean>;
 
   constructor(
     public authService: AuthService,
+    private themeService: ThemeService,
+    private datePipe: DatePipe,
 
     private router: Router,
     private fb: FormBuilder
@@ -65,6 +75,7 @@ export class ProfileComponent implements OnInit {
       province: ['', Validators.required],
       postalCode: ['', Validators.required],
     });
+    this.isDarkMode$ = this.themeService.isDarkTheme$;
   }
 
   ngOnInit(): void {
@@ -80,11 +91,20 @@ export class ProfileComponent implements OnInit {
       this.authService.getUserProfile(userNum).subscribe({
         next: (user) => {
           this.userProfile = user;
-          this.profileForm.patchValue(user);
+          const formValue = {
+            ...user,
+            birthday: user.birthday
+              ? new Date(user.birthday.split('/').reverse().join('-'))
+              : '',
+          };
+          this.profileForm.patchValue(formValue);
         },
         error: (error) => console.error('Error fetching user profile:', error),
       });
     }
+  }
+  toggleTheme() {
+    this.themeService.toggleTheme();
   }
 
   logout(): void {
@@ -104,9 +124,14 @@ export class ProfileComponent implements OnInit {
         'Form Submitted, current form value:',
         this.profileForm.value
       );
+      const formattedBirthday = this.datePipe.transform(
+        this.profileForm.value.birthday,
+        'yyyy/MM/dd'
+      );
       const userData: User = {
         ...this.userProfile,
         ...this.profileForm.value,
+        birthday: formattedBirthday,
         userNum: this.userProfile.userNum,
         isAdmin: this.userProfile.isAdmin,
       };

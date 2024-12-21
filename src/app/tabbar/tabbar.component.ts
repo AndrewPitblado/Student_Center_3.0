@@ -14,6 +14,7 @@ import { FinancialsComponent } from '../financials/financials.component';
 import { DocumentsComponent } from '../documents/documents.component';
 import { AdminStateService } from '../services/admin-state.service';
 import { ActivatedRoute } from '@angular/router';
+import { ThemeService } from '../services/theme.service';
 
 interface TabConfig {
   icon: string;
@@ -44,11 +45,13 @@ interface TabConfig {
 })
 export class TabbarComponent implements OnInit {
   isAdmin$: Observable<boolean>;
+
   selectedIndex = 0;
 
   constructor(
     private adminStateService: AdminStateService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private themeService: ThemeService
   ) {
     this.isAdmin$ = this.adminStateService.isAdmin$;
   }
@@ -84,14 +87,14 @@ export class TabbarComponent implements OnInit {
       studentOnly: true,
     },
     {
-      icon: 'addition',
+      icon: 'add',
       label: 'Add Course',
       component: AddCourseComponent,
       adminOnly: true,
     },
     {
-      icon: 'add',
-      label: 'Add Student',
+      icon: 'person_add',
+      label: 'Add User',
       component: AddStudentComponent,
       adminOnly: true,
     },

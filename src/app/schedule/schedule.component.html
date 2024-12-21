@@ -1,1 +1,57 @@
-<p>schedule works!</p>
+<div class="schedule-wrapper">
+  <h2>My Current Schedule</h2>
+
+  <h3>Semester 1 (Fall)</h3>
+  <div class="schedule-grid">
+    <!-- Weekday Headers -->
+    <div class="time-column"></div>
+    <div class="weekday" *ngFor="let day of weekdays">{{ day.name }}</div>
+
+    <!-- Time Column -->
+    <div *ngFor="let time of timeSlots" class="time-slot">{{ time }}</div>
+
+    <!-- Dynamic Course Blocks for Semester 1 -->
+    <ng-container *ngFor="let course of courseTimes">
+      <div
+        *ngIf="isInSemester(course, 1)"
+        class="course-block"
+        [ngStyle]="getCourseStyle(course)"
+      >
+        <div class="course-content">
+          <strong>{{ getCourseName(course.courseNum) }}</strong
+          ><br />
+          {{ getCourseType(course.courseNum) }}
+          {{ formatTime(course.startTime) }} -
+          {{ formatTime(course.endTime) }}
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <h3>Semester 2 (Winter)</h3>
+  <div class="schedule-grid">
+    <!-- Weekday Headers -->
+    <div class="time-column"></div>
+    <div class="weekday" *ngFor="let day of weekdays">{{ day.name }}</div>
+
+    <!-- Time Column -->
+    <div *ngFor="let time of timeSlots" class="time-slot">{{ time }}</div>
+
+    <!-- Dynamic Course Blocks for Semester 2 -->
+    <ng-container *ngFor="let course of courseTimes">
+      <div
+        *ngIf="isInSemester(course, 2)"
+        class="course-block"
+        [ngStyle]="getCourseStyle(course)"
+      >
+        <div class="course-content">
+          <strong>{{ getCourseName(course.courseNum) }}</strong
+          ><br />
+          {{ getCourseType(course.courseNum) }}
+          {{ formatTime(course.startTime) }} -
+          {{ formatTime(course.endTime) }}
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

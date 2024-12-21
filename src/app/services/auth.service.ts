@@ -63,31 +63,6 @@ export class AuthService {
     console.log('Starting logout process for userId:', userId);
     this.clearLocalStorage();
     this.isAuthenticatedSubject.next(false);
-    // if (!userId) {
-    //   console.log('No userId found, completing logout');
-    //   this.clearLocalStorage();
-    //   return of(void 0);
-    // }
-
-    // return this.http.delete<void>(`${this.apiurl}/Login/${userId}`).pipe(
-    //   tap(() => {
-    //     console.log('Successfully deleted login session');
-    //     this.clearLocalStorage();
-    //     this.isAuthenticatedSubject.next(false);
-    //   }),
-    //   catchError((error) => {
-    //     console.error('Logout API error:', error);
-
-    //     if (error.status === 404) {
-    //       // Session already gone, just clear local state
-    //       console.log('Login session not found, clearing local state');
-    //       this.clearLocalStorage();
-    //       return of(void 0);
-    //     }
-
-    //     return throwError(() => error);
-    //   })
-    // );
   }
 
   authenticate(credentials: LoginCredentials): Observable<User> {
@@ -98,109 +73,20 @@ export class AuthService {
       }),
     };
 
-    // // First check if user exists by userId
-    // return this.http
-    //   .get<User[]>(`${this.apiurl}/User/${credentials.userId}`)
-    //   .pipe(
-    //     switchMap((users) => {
-    //       if (users && users.length > 0) {
-    //         // User exists, create login
-    //         const existingUser = users[0];
-    //         console.log('Found existing user:', existingUser);
-
-    //         const loginDTO: LoginDTO = {
-    //           userId: credentials.userId,
-    //           password: credentials.password,
-    //           userNum: existingUser.userNum,
-    //         };
-
-    //         return this.http
-    //           .post<LoginResponse>(
-    //             `${this.apiurl}/Login`,
-    //             loginDTO,
-    //             httpOptions
-    //           )
-    //           .pipe(
-    //             tap(() => {
-    //               localStorage.setItem('userId', credentials.userId);
-    //               localStorage.setItem(
-    //                 'userNum',
-    //                 existingUser.userNum.toString()
-    //               );
-    //               localStorage.setItem(
-    //                 'isAdmin',
-    //                 existingUser.isAdmin.toString()
-    //               );
-    //               this.updateStoredUserData(existingUser);
-    //               this.isAuthenticatedSubject.next(true);
-    //             }),
-    //             map(() => existingUser)
-    //           );
-    //       } else {
-    //         // User doesn't exist, create new user then login
-    //         console.log('User not found, creating new user');
-    //         return this.createNewUserAndLogin(credentials, httpOptions);
-    //       }
-    //     }),
-    //     catchError((error) => {
-    //       console.error('Authentication error:', error);
-    //       return throwError(() => error);
-    //     })
-    //   );
-
-    // WORKING CODE BELOW THIS LINE
-
-    // const userDto: UserDTO = {
-    //   userNum: this.generateRandomUserNum(), // Use the unique userNum
-    //   firstName: 'FirstName',
-    //   middleName: '',
-    //   lastName: 'LastName',
-    //   birthday: '2000-01-01',
-    //   socialInsuranceNum: '123456789',
-    //   email: 'default@example.com',
-    //   phoneNum: '1234567890',
-    //   streetAddress: '1234 Example St',
-    //   city: 'Example City',
-    //   province: 'ON',
-    //   postalCode: 'A1A1A1',
-    //   isAdmin: false,
-    // };
-
-    // //Create new user first
-    // return this.http.post<User>(`${this.apiurl}/User`, userDto).pipe(
-    //   switchMap((user) => {
-    //     const loginDTO: LoginDTO = {
-    //       userId: credentials.userId,
-    //       password: credentials.password,
-    //       userNum: user.userNum,
-    //     };
-
-    //     console.log(
-    //       'PUT Request URL:',
-    //       `${this.apiurl}/Login/${loginDTO.userNum}`
-    //     );
-    //     console.log('PUT Request Payload:', loginDTO);
-
-    //     return this.http
-    //       .post<User>(`${this.apiurl}/Login`, loginDTO, httpOptions)
-    //       .pipe(map(() => user));
-    //   }),
-    //   tap((user) => {
-    //     localStorage.setItem('userId', credentials.userId);
-    //     localStorage.setItem('userNum', user.userNum.toString());
-    //     localStorage.setItem('isAdmin', user.isAdmin.toString());
-    //     this.updateStoredUserData(user);
-    //     this.isAuthenticatedSubject.next(true);
-    //   }),
-    //   catchError((error) => {
-    //     console.error('Authentication error:', error);
-    //     return throwError(() => error);
-    //   })
-    // );
-
     return this.http
       .get<LoginDTO>(`${this.apiurl}/Login/${credentials.userId}`)
       .pipe(
+        catchError((error) => {
+          if (error.status === 404) {
+            const storedUserData = localStorage.getItem('pendingUserData');
+            if (storedUserData) {
+              return this.createNewUserAndLogin(credentials, httpOptions);
+            } else {
+              return throwError(() => new Error('No pending user data found'));
+            }
+          }
+          return throwError(() => error);
+        }),
         switchMap((login) => {
           if (login) {
             console.log('Found existing login:', login);
@@ -235,10 +121,10 @@ export class AuthService {
           }
         }),
         catchError((error) => {
-          if (error.status === 404) {
-            console.log('Login not found, creating new user');
-            return this.checkAndCreateUser(credentials, httpOptions);
-          }
+          // if (error.status === 404) {
+          //   console.log('Login not found, creating new user');
+          //   return this.checkAndCreateUser(credentials, httpOptions);
+          // }
           console.error('Authentication error:', error);
           return throwError(() => error);
         })
@@ -282,10 +168,15 @@ export class AuthService {
   }
 
   private clearLocalStorage(): void {
-    localStorage.removeItem('userId');
-    localStorage.removeItem('userNum');
-    localStorage.removeItem('isAdmin');
-    localStorage.removeItem('userData');
+    const pendingUserData = localStorage.getItem('pendingUserData');
+    localStorage.clear();
+    if (pendingUserData) {
+      localStorage.setItem('pendingUserData', pendingUserData);
+    }
+    // localStorage.removeItem('userId');
+    // localStorage.removeItem('userNum');
+    // localStorage.removeItem('isAdmin');
+    // localStorage.removeItem('userData');
   }
 
   getUserProfile(userNum: number): Observable<User> {
@@ -329,180 +220,49 @@ export class AuthService {
     credentials: LoginCredentials,
     httpOptions: any
   ): Observable<User> {
-    const userDto: UserDTO = {
-      userNum: this.generateRandomUserNum(), // Use the unique userNum
-      firstName: 'FirstName',
-      middleName: '',
-      lastName: 'LastName',
-      birthday: '2000-01-01',
-      socialInsuranceNum: '123456789',
-      email: 'default@example.com',
-      phoneNum: '1234567890',
-      streetAddress: '1234 Example St',
-      city: 'Example City',
-      province: 'ON',
-      postalCode: 'A1A1A1',
-      isAdmin: false,
-    };
-    return this.http.post<User>(`${this.apiurl}/User`, userDto).pipe(
-      switchMap((newUser) => {
-        console.log('New user created:', newUser);
+    const storedUserData = localStorage.getItem('pendingUserData');
+    console.log('Stored user data:', storedUserData);
+    if (!storedUserData) {
+      return throwError(() => new Error('No pending user data found'));
+    }
 
-        const loginDTO: LoginDTO = {
-          userId: credentials.userId,
-          password: credentials.password,
-          userNum: newUser.userNum,
-        };
-        if (newUser.isAdmin) {
-          this.adminStateService.setAdminStatus(true);
-        } else {
-          this.adminStateService.setAdminStatus(false);
-        }
+    const userData = JSON.parse(storedUserData);
+    console.log('Parsed User Data:', userData);
 
-        return this.http
-          .post<LoginResponse>(`${this.apiurl}/Login`, loginDTO, httpOptions)
-          .pipe(
-            tap(() => {
-              localStorage.setItem('userId', credentials.userId);
-              localStorage.setItem('userNum', newUser.userNum.toString());
-              localStorage.setItem('isAdmin', newUser.isAdmin.toString());
-              this.updateStoredUserData(newUser);
-              this.isAuthenticatedSubject.next(true);
-            }),
-            map(() => newUser)
-          );
-      }),
-      catchError((error) => {
-        console.error('Error creating new user and login:', error);
-        return throwError(() => error);
-      })
-    );
-
-    // WORKING CODE BELOW THIS LINE
-    // const generateUniqueUserNum = (): Observable<number> => {
-    //   const randomUserNum = this.generateRandomUserNum();
-    //   return this.http.get<User>(`${this.apiurl}/User/${randomUserNum}`).pipe(
-    //     switchMap(() => {
-    //       return generateUniqueUserNum();
-    //     }),
-    //     catchError((error) => {
-    //       if (error.status === 404) {
-    //         console.log('Unique userNum found:', randomUserNum);
-    //         return of(randomUserNum);
-    //       }
-    //       return throwError(() => error);
-    //     })
-    //   );
-    // };
-    // return generateUniqueUserNum().pipe(
-    //   switchMap((uniqueUserNum) => {
-    //     const userDto: UserDTO = {
-    //       userNum: uniqueUserNum, // Use the unique userNum
-    //       firstName: 'FirstName',
-    //       middleName: '',
-    //       lastName: 'LastName',
-    //       birthday: '2000-01-01',
-    //       socialInsuranceNum: '123456789',
-    //       email: 'default@example.com',
-    //       phoneNum: '1234567890',
-    //       streetAddress: '1234 Example St',
-    //       city: 'Example City',
-    //       province: 'ON',
-    //       postalCode: 'A1A1A1',
-    //       isAdmin: false,
-    //     };
-    //     return this.http.post<User>(`${this.apiurl}/User`, userDto).pipe(
-    //       switchMap((newUser) => {
-    //         console.log('New user created:', newUser);
-    //         if (!newUser || !newUser.userNum) {
-    //           console.error('User creation failed or userNum is missing');
-    //           return throwError(() => new Error('User creation failed'));
-    //         }
-    //         const loginDTO: LoginDTO = {
-    //           userId: credentials.userId,
-    //           password: credentials.password,
-    //           userNum: newUser.userNum,
-    //         };
-    //         console.log('Creating login with:', loginDTO);
-    //         return this.http
-    //           .post<LoginResponse>(
-    //             `${this.apiurl}/Login`,
-    //             loginDTO,
-    //             httpOptions
-    //           )
-    //           .pipe(
-    //             tap((loginResponse) => {
-    //               console.log('Login response:', loginResponse);
-    //               localStorage.setItem('userId', credentials.userId);
-    //               localStorage.setItem('userNum', newUser.userNum.toString());
-    //               localStorage.setItem('isAdmin', newUser.isAdmin.toString());
-    //               this.updateStoredUserData(newUser);
-    //               this.isAuthenticatedSubject.next(true);
-    //             }),
-    //             map(() => newUser)
-    //           );
-    //       }),
-    //       catchError((error) => {
-    //         console.error('Error creating new user and login:', error);
-    //         return throwError(() => error);
-    //       })
-    //     );
-    //   })
-    // );
-
-    // const userDto: UserDTO = {
-    //   firstName: 'FirstName',
-    //   middleName: '',
-    //   lastName: 'LastName',
-    //   birthday: '2000-01-01',
-    //   socialInsuranceNum: '123456789',
-    //   email: 'default@example.com',
-    //   phoneNum: '1234567890',
-    //   streetAddress: '1234 Example St',
-    //   city: 'Example City',
-    //   province: 'ON',
-    //   postalCode: 'A1A1A1',
-    //   isAdmin: false,
-    // };
-    // return this.http.post<User>(`${this.apiurl}/User`, userDto).pipe(
-    //   switchMap((newUser) => {
-    //     console.log('New user created:', newUser);
-    //     if (!newUser || !newUser.userNum) {
-    //       console.error('User creation failed or userNum is missing');
-    //       return throwError(() => new Error('User creation failed'));
-    //     }
-    //     const loginDTO: LoginDTO = {
-    //       userId: credentials.userId,
-    //       password: credentials.password,
-    //       userNum: newUser.userNum,
-    //     };
-
-    //     console.log(
-    //       'PUT Request URL:',
-    //       `${this.apiurl}/Login/${loginDTO.userNum}`
-    //     );
-    //     console.log('PUT Request Payload:', loginDTO);
-
-    //     return this.http
-    //       .post<LoginResponse>(`${this.apiurl}/Login`, loginDTO, httpOptions)
-    //       .pipe(
-    //         tap((loginResponse) => {
-    //           console.log('Login created:', loginResponse);
-    //           localStorage.setItem('userId', credentials.userId);
-    //           localStorage.setItem('userNum', newUser.userNum.toString());
-    //           localStorage.setItem('isAdmin', newUser.isAdmin.toString());
-    //           this.updateStoredUserData(newUser);
-    //           this.isAuthenticatedSubject.next(true);
-    //         }),
-    //         map(() => newUser)
-    //       );
-    //   }),
-
-    //   catchError((error) => {
-    //     console.error('Authentication error:', error);
-    //     return throwError(() => error);
-    //   })
-    // );
+    // First check if login exists
+    return this.http
+      .get<LoginResponse>(`${this.apiurl}/Login/${credentials.userId}`)
+      .pipe(
+        catchError((error) => {
+          if (error.status === 404) {
+            // Login doesn't exist, create it
+            const loginDTO: LoginDTO = {
+              userId: credentials.userId,
+              password: credentials.password,
+              userNum: userData.userNum,
+            };
+            console.log('Login DTO:', loginDTO);
+            return this.http.post<LoginResponse>(
+              `${this.apiurl}/Login`,
+              loginDTO,
+              httpOptions
+            );
+          }
+          return throwError(() => error);
+        }),
+        // After login check/creation, get user data
+        switchMap(() =>
+          this.http.get<User>(`${this.apiurl}/User/${userData.userNum}`)
+        ),
+        tap((user) => {
+          localStorage.setItem('userId', credentials.userId);
+          localStorage.setItem('userNum', userData.userNum.toString());
+          localStorage.setItem('isAdmin', userData.isAdmin.toString());
+          localStorage.removeItem('pendingUserData');
+          this.updateStoredUserData(user);
+          this.isAuthenticatedSubject.next(true);
+        })
+      );
   }
   isAdmin(): boolean {
     return localStorage.getItem('isAdmin') === 'true';

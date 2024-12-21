@@ -1,0 +1,32 @@
+.user-form-card {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+.user-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+mat-form-field {
+  flex: 1;
+  min-width: 200px;
+}
+
+button[type="submit"] {
+  align-self: flex-end;
+  min-width: 150px;
+  margin-top: 20px;
+}
+
+mat-slide-toggle {
+  margin-top: 10px;
+}

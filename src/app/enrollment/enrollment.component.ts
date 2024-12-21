@@ -1,29 +1,34 @@
 import { Component, viewChild } from '@angular/core';
-import { NavbarComponent } from '../NavBar/navbar.component';
-import { MatButtonModule } from '@angular/material/button';
-import { MatTableModule } from '@angular/material/table';
-import { CommonModule } from '@angular/common';
-import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
-import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { ChangeDetectionStrategy } from '@angular/core';
-import { MatListModule } from '@angular/material/list';
-import { MatDividerModule } from '@angular/material/divider';
+
 import { CourseData, SessionData } from '../interface/enrollment.interface';
-import { MatSelectModule } from '@angular/material/select';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
+
 import { startWith, map } from 'rxjs/operators';
 import { OnInit } from '@angular/core';
 import { CourseDTO } from '../interface/course';
 import { CourseSelectorComponent } from '../course-selector/course-selector.component';
+
+import { Observable } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
+import { CommonModule } from '@angular/common';
+import {
+  MatAccordion,
+  MatExpansionModule,
+  MatExpansionPanel,
+} from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatSelectModule } from '@angular/material/select';
 import {
   FormControl,
-  Validators,
   FormsModule,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-enrollment',
@@ -34,16 +39,17 @@ import { Observable } from 'rxjs';
     CommonModule,
     MatAccordion,
     MatExpansionModule,
-    MatIconModule,
     MatFormFieldModule,
     MatInputModule,
     MatListModule,
     MatDividerModule,
     MatSelectModule,
     FormsModule,
+
     ReactiveFormsModule,
-    MatAutocompleteModule,
     CourseSelectorComponent,
+    MatIconModule,
+    MatAutocompleteModule,
   ],
   templateUrl: './enrollment.component.html',
   styleUrl: './enrollment.component.css',

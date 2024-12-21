@@ -1,0 +1,14 @@
+.icon {
+  font-size: 24px;
+  height: 24px;
+  width: 24px;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+.working-on-it {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding: 16px;
+}

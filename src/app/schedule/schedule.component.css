@@ -1,0 +1,61 @@
+/* Main Wrapper */
+.schedule-wrapper {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+h2,
+h3 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* Schedule Grid */
+.schedule-grid {
+  display: grid;
+  grid-template-columns: 100px repeat(5, 1fr);
+  grid-auto-rows: 40px;
+  row-gap: 15px;
+  column-gap: 5px;
+  grid-auto-flow: dense; /* This helps with block positioning */
+
+  position: relative;
+
+  margin-bottom: 20px;
+}
+
+/* Weekday Headers */
+.weekday {
+  text-align: center;
+  font-weight: bold;
+
+  padding: 5px;
+}
+
+/* Time Slots */
+.time-slot {
+  grid-column: 1 / 2; /* Sticks to the first column */
+  text-align: center;
+
+  padding: 5px;
+  font-size: 12px;
+}
+
+/* Course Blocks */
+.course-block {
+  /* remove position: absolute */
+  border-radius: 8px;
+  background-color: rgba(100, 149, 237, 0.8);
+  color: white;
+  text-align: center;
+  font-size: 12px;
+  padding: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  margin: 1px 5px; /* Add some margin between blocks */
+  z-index: 1; /* Ensure blocks appear above grid lines */
+  height: calc(100% - 5px); /* Fill the height of the row */
+}
+
+.course-content {
+  pointer-events: none; /* Avoid interaction */
+}

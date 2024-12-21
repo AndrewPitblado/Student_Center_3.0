@@ -1,0 +1,25 @@
+<div *ngIf="isOpen$ | async" class="course-dropdown">
+  <div *ngIf="filteredCourses.length === 0" class="no-results">
+    No courses found
+  </div>
+  <ul *ngIf="filteredCourses.length > 0" class="course-list">
+    <li
+      *ngFor="let course of filteredCourses"
+      class="course-item"
+      (click)="onCourseSelect(course)"
+    >
+      <div class="course-info">
+        <div class="course-header">
+          <span class="course-code"
+            >{{ course.courseAlias }} {{ course.courseSuffix }}</span
+          >
+          <br />
+          <span class="seats-info"
+            >{{ course.numEnrolled }}/{{ course.totalSeats }} seats</span
+          >
+        </div>
+        <div class="course-name">{{ course.courseName }}</div>
+      </div>
+    </li>
+  </ul>
+</div>

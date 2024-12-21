@@ -1,12 +1,10 @@
 import { Component } from '@angular/core';
-
+import { MatIcon } from '@angular/material/icon';
 @Component({
   selector: 'app-documents',
   standalone: true,
-  imports: [],
+  imports: [MatIcon],
   templateUrl: './documents.component.html',
-  styleUrl: './documents.component.css'
+  styleUrl: './documents.component.css',
 })
-export class DocumentsComponent {
-
-}
+export class DocumentsComponent {}

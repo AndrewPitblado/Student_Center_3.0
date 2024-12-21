@@ -1,1 +1,158 @@
-<p>add-student works!</p>
+<mat-card class="user-form-card">
+  <mat-card-header>
+    <mat-card-title>Add New User</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="user-form">
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Student Number</mat-label>
+          <input
+            matInput
+            formControlName="userNum"
+            required
+            placeholder="Enter 9-digit student number"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>First Name</mat-label>
+          <input matInput formControlName="firstName" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Middle Name</mat-label>
+          <input matInput formControlName="middleName" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Last Name</mat-label>
+          <input matInput formControlName="lastName" required />
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Birthday</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            formControlName="birthday"
+            required
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>SIN</mat-label>
+          <input
+            matInput
+            formControlName="socialInsuranceNum"
+            required
+            placeholder="Enter 9-digit SIN"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" required type="email" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Phone Number</mat-label>
+          <input
+            matInput
+            formControlName="phoneNum"
+            required
+            placeholder="1234567890"
+          />
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Street Address</mat-label>
+          <input matInput formControlName="streetAddress" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>City</mat-label>
+          <input matInput formControlName="city" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Province</mat-label>
+          <input
+            matInput
+            formControlName="province"
+            required
+            placeholder="ON"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Postal Code</mat-label>
+          <input
+            matInput
+            formControlName="postalCode"
+            required
+            placeholder="A1A 1A1"
+          />
+        </mat-form-field>
+      </div>
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>User ID</mat-label>
+          <input
+            matInput
+            formControlName="userId"
+            required
+            placeholder="Enter user ID (min 6 characters)"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            formControlName="password"
+            required
+            [type]="hidePassword ? 'password' : 'text'"
+            placeholder="Enter password (min 8 characters)"
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="hidePassword = !hidePassword"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hidePassword"
+            type="button"
+          >
+            <mat-icon>{{
+              hidePassword ? "visibility_off" : "visibility"
+            }}</mat-icon>
+          </button>
+          <mat-hint
+            >Must contain uppercase, lowercase, number and special
+            character</mat-hint
+          >
+        </mat-form-field>
+      </div>
+
+      <mat-slide-toggle formControlName="isAdmin">Admin User</mat-slide-toggle>
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="!userForm.valid"
+      >
+        Create User
+      </button>
+    </form>
+  </mat-card-content>
+</mat-card>

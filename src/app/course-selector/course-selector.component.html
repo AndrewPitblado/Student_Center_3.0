@@ -2,43 +2,56 @@
 <div class="course-selector">
   <!-- Search and Filter Controls -->
   <div class="controls-container">
-    <!-- Search Input -->
-    <div class="search-container">
-      <input
-        #courseInput
-        matInput
-        [formControl]="searchControl"
-        type="text"
-        placeholder="Search courses..."
-        class="search-input"
-        (focus)="isDropdownOpen = true"
-        [value]="selectedCourseDisplay"
-      />
+    <div class="search-field-wrapper">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search courses</mat-label>
+        <input
+          #courseInput
+          matInput
+          [formControl]="searchControl"
+          type="text"
+          placeholder="Start typing to search..."
+          name="courseSearch"
+          (focus)="onMainCourseFocus()"
+          (click)="clearSearch()"
+        />
+
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="loading-state">Loading courses...</div>
+
+      <!-- Error State -->
+      <div *ngIf="error" class="error-state">
+        {{ error }}
+      </div>
+
+      <!-- Course List Dropdown -->
+      <app-drop-down
+        dropDownId="main-dropdown"
+        [filteredCourses]="filteredCourses"
+        (courseSelected)="selectCourse($event)"
+      >
+        ></app-drop-down
+      >
     </div>
 
-    <!-- Filter Select -->
-    <mat-select
-      [ngModel]="selectedFilter"
-      (ngModelChange)="onFilterChange($event)"
-      class="filter-select"
-    >
-      <mat-option value="all">All Courses</mat-option>
-      <mat-option value="available">Available Seats</mat-option>
-      <mat-option value="current">Current Courses</mat-option>
-      <mat-option value="upcoming">Upcoming Courses</mat-option>
-    </mat-select>
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Filter courses</mat-label>
+      <mat-select
+        [(ngModel)]="selectedFilter"
+        (selectionChange)="onFilterChange($event.value)"
+        name="courseFilter"
+      >
+        <mat-option value="all">All Courses</mat-option>
+        <mat-option value="fall">Fall Semester(A)</mat-option>
+        <mat-option value="winter">Winter Semester(B)</mat-option>
+        <mat-option value="lecture">Lecture Courses</mat-option>
+        <mat-option value="lab">Lab Courses</mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
-
-  <!-- Loading State -->
-  <div *ngIf="isLoading" class="loading-state">Loading courses...</div>
-
-  <!-- Error State -->
-  <div *ngIf="error" class="error-state">
-    {{ error }}
-  </div>
-
-  <!-- Course List Dropdown -->
-  <div
+  <!-- <div
     *ngIf="isDropdownOpen && !isLoading"
     class="course-dropdown"
     #courseDropdown
@@ -48,33 +61,194 @@
     </div>
 
     <ul *ngIf="filteredCourses.length > 0" class="course-list">
-      <li
-        *ngFor="let course of filteredCourses"
-        (click)="selectCourse(course)"
-        class="course-item"
-      >
-        <div class="course-info">
-          <div class="course-header">
-            <span class="course-code"
-              >{{ course.courseAlias }} {{ course.courseSuffix }}</span
-            >
-            <span class="seats-info"
-              >{{ course.numEnrolled }}/{{ course.totalSeats }} seats</span
-            >
+      <li *ngFor="let course of filteredCourses" class="course-group">
+        <div (click)="selectCourse(course)" class="course-item main-course">
+          <div class="course-info">
+            <div class="course-header">
+              <span class="course-code"
+                >{{ course.courseAlias }} {{ course.courseSuffix }}</span
+              >
+              <span class="seats-info"
+                >{{ course.numEnrolled }}/{{ course.totalSeats }} seats</span
+              >
+            </div>
+            <div class="course-name">{{ course.courseName }}</div>
           </div>
-          <div class="course-name">{{ course.courseName }}</div>
         </div>
+
+        <ul *ngIf="course.labComponents?.length" class="lab-list">
+          <li
+            *ngFor="let lab of course.labComponents"
+            (click)="selectCourse(lab)"
+            class="course-item lab-item"
+          >
+            <div class="course-info">
+              <div class="course-header">
+                <span class="course-code">
+                  <mat-icon class="lab-icon">experiment</mat-icon>
+                  LAB {{ lab.courseSuffix }}
+                </span>
+                <span class="seats-info"
+                  >{{ lab.numEnrolled }}/{{ lab.totalSeats }} seats</span
+                >
+              </div>
+              <div class="course-name">{{ lab.courseName }}</div>
+            </div>
+          </li>
+        </ul>
       </li>
     </ul>
-  </div>
+  </div> -->
   <!-- Selected Course and Enroll Button -->
   <div *ngIf="selectedCourse" class="selected-course">
-    <h3>
-      You selected: {{ selectedCourse.courseAlias }}
-      {{ selectedCourse.courseSuffix }}
-    </h3>
-    <button mat-raised-button color="primary" (click)="enrollInCourse()">
-      Enroll in Course
-    </button>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          {{ selectedCourse.courseAlias }} {{ selectedCourse.courseSuffix }} -
+          {{ selectedCourse.courseName }}
+        </mat-card-title>
+        <mat-card-subtitle> Course Details </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="details-grid">
+          <div class="detail-item">
+            <strong>Description:</strong>
+            <p>{{ selectedCourse.courseDesc }}</p>
+          </div>
+          <div class="detail-item" *ngIf="selectedCourse.extraInformation">
+            <strong>Extra Information:</strong>
+            <p>{{ selectedCourse.extraInformation }}</p>
+          </div>
+          <div class="detail-row">
+            <div class="detail-item" *ngIf="selectedCourse.instructor">
+              <strong>Instructor:</strong>
+              <p>{{ selectedCourse.instructor }}</p>
+            </div>
+            <div class="detail-item" *ngIf="selectedCourse.room">
+              <strong>Location:</strong>
+              <p>{{ selectedCourse.room }}</p>
+            </div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-item">
+              <strong>Start Date:</strong>
+              <p>{{ selectedCourse.startDate | date }}</p>
+            </div>
+            <div class="detail-item">
+              <strong>End Date:</strong>
+              <p>{{ selectedCourse.endDate | date }}</p>
+            </div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-item">
+              <strong>Available Seats:</strong>
+              <p>
+                {{ selectedCourse.totalSeats - selectedCourse.numEnrolled }} of
+                {{ selectedCourse.totalSeats }}
+              </p>
+            </div>
+            <div class="detail-item">
+              <strong>Course Weight</strong>
+              <p>{{ selectedCourse.courseWeight }}</p>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="course-actions">
+      <button mat-raised-button color="primary" (click)="enrollInCourse()">
+        Enroll in Course
+      </button>
+      <button mat-raised-button color="warn" (click)="dropCourse()">
+        Drop Course
+      </button>
+    </div>
   </div>
+  <div class="text-container">
+    <h2>Swap Courses</h2>
+  </div>
+  <div class="swap-course-container">
+    <div class="search-field-wrapper">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Select Course to Add</mat-label>
+        <input
+          #swapAddInput
+          matInput
+          [formControl]="addCourseControl"
+          type="text"
+          placeholder="Search course to add..."
+          (focus)="onAddCourseFocus()"
+        />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+      <app-drop-down
+        dropDownId="swap-add-dropdown"
+        [filteredCourses]="swapAddFilteredCourses"
+        (courseSelected)="selectSwapAddCourse($event)"
+      >
+      </app-drop-down>
+    </div>
+
+    <!-- <div
+      *ngIf="isSwapAddDropdownOpen"
+      class="course-dropdown swap-add-dropdown"
+    >
+      <div
+        *ngFor="let course of swapAddFilteredCourses"
+        class="course-item"
+        (click)="selectSwapAddCourse(course)"
+      >
+        {{ course.courseName }} - {{ course.courseAlias }}
+        {{ course.courseSuffix }}
+      </div>
+    </div> -->
+    <div class="search-field-wrapper">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Select Course to Drop</mat-label>
+        <input
+          #swapDropInput
+          matInput
+          [formControl]="dropCourseControl"
+          type="text"
+          placeholder="Search course to drop..."
+          (focus)="onDropCourseFocus()"
+        />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+      <app-drop-down
+        dropDownId="swap-drop-dropdown"
+        [filteredCourses]="swapDropFilteredCourses"
+        (courseSelected)="selectSwapDropCourse($event)"
+      >
+      </app-drop-down>
+    </div>
+    <!-- <div
+      *ngIf="isSwapDropDropdownOpen"
+      class="course-dropdown swap-drop-dropdown"
+    >
+      <div
+        *ngFor="let course of swapDropFilteredCourses"
+        class="course-item"
+        (click)="selectSwapDropCourse(course)"
+      >
+        {{ course.courseName }} - {{ course.courseAlias }}
+        {{ course.courseSuffix }}
+      </div>
+    </div> -->
+    <div *ngIf="selectedAddCourse && selectedSwapCourse" class="swap-action">
+      <button mat-raised-button color="primary" (click)="swapCourse()">
+        Swap Courses
+      </button>
+    </div>
+  </div>
+  <p class="info-hint">
+    <mat-icon
+      class="hint-icon"
+      style="font-size: 18px; height: 18px; width: 18px"
+      >info</mat-icon
+    >
+    *For updated course enrollment numbers, please refresh page after course
+    Add/Drop/Swap
+  </p>
 </div>
